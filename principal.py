@@ -1,15 +1,19 @@
-# -*- coding: utf-8 -*-
+import sys
+from PyQt4 import Qt
 
-try:
-    from PySide import QtCore
-    from PySide import QtWidgets
-except:
-    from PyQt4.QtCore import pyqtSlot as Slot
-    from PyQt4 import QtCore
-    from PyQt4 import QtWidgets
+a = Qt.QApplication(sys.argv)
 
+# Our function to call when the button is clicked
+def sayHello():
+    print ("Hello, World!")
 
-class principal(QWidget):
-    def __init__(self):
-        QWidget.__init__(self)
-        pass
+# Instantiate the button
+hellobutton = Qt.QPushButton("Say 'Hello world!'",None)
+
+# And connect the action "sayHello" to the event "button has been clicked"
+a.connect(hellobutton, Qt.SIGNAL("clicked()"), sayHello)
+
+# The rest is known already...
+#a.setMainWidget(hellobutton)
+hellobutton.show()
+a.exec_()
