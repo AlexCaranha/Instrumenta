@@ -1,19 +1,34 @@
 import sys
-from PyQt4 import Qt
+from PyQt5.QtWidgets import *
 
-a = Qt.QApplication(sys.argv)
 
-# Our function to call when the button is clicked
-def sayHello():
-    print ("Hello, World!")
+class Example(QWidget):
+    
+    def __init__(self):
+        super().__init__()
+        self.initUI()
 
-# Instantiate the button
-hellobutton = Qt.QPushButton("Say 'Hello world!'",None)
+    def initUI(self):
+        edt_search = QLineEdit()
+        list_result = QTextEdit()
 
-# And connect the action "sayHello" to the event "button has been clicked"
-a.connect(hellobutton, Qt.SIGNAL("clicked()"), sayHello)
+        edt_search.keyPressEvent(self.keyPressEvent123)
 
-# The rest is known already...
-#a.setMainWidget(hellobutton)
-hellobutton.show()
-a.exec_()
+        layout = QVBoxLayout()
+        layout.addWidget(edt_search)
+        layout.addWidget(list_result)
+
+        self.setLayout(layout)
+        
+        self.setGeometry(300, 300, 350, 300)
+        self.setWindowTitle('Instrumenta')
+        self.show()
+
+    def keyPressEvent123(self):
+        sender = self.sender()
+        self.statusBar().showMessage("{0} : {1}".format(sender.text(), event.key()))
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
