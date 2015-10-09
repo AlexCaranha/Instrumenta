@@ -2,6 +2,10 @@ from PySide.QtCore import *
 from PySide.QtGui import *
 # from PySide.QtGui import QTextEdit
 
+# import pyautogui
+# mouse e teclado: http://pyautogui.readthedocs.org/en/latest/mouse.html
+
+
 __author__ = 'lual'
 
 
@@ -38,3 +42,5 @@ class MainWindow(QWidget):
         if widget is self.edit and event.type() == QEvent.KeyRelease:
             #print("keyPressed: {0}".format(event.key()))
             print("texto: {0}".format(widget.text()))
+
+        return False
