@@ -1,5 +1,7 @@
 import pymssql
 
+__author__ = 'Alex Libório Caranha'
+
 
 def get_arguments_in_stored_procedure(stored_procedure, host, database):
     connection = pymssql.connect(host=host, database=database, as_dict=True)

@@ -1,75 +1,68 @@
 import sys
 import view.mainView
-
-import pymouse
-from screeninfo import get_monitors
+import classes.util
 
 from PySide.QtGui import *
 
-def get_center_of_actual_monitor():
-	mouse = pymouse.PyMouse()
-	mouse_x, mouse_y = mouse.position()
-	actual_monitor = None
-	
-	print("mouse.x: {0}, mouse.y: {1}".format(mouse_x, mouse_y))
-	
-	monitors = get_monitors()
-	
-	center_x = 0
-	center_y = 0
-	
-	for iMonitor in range(0, len(monitors)):
-		monitor = monitors[iMonitor]
-		
-		jMonitor = iMonitor
-				
-		monitor_left = monitor.x
-		monitor_right = monitor.x + monitor.width
-		
-		print("\nmonitor: {0}, width: {1}".format(iMonitor, monitor.width))
-		print("left: {0}, right: {1}".format(monitor_left, monitor_right))
-		
-		if monitor_left <= mouse_x and mouse_x < monitor_right:
-			print("found")
-			
-			actual_monitor = monitor						
-			
-			center_x = int((monitor_left + monitor_right)/2)
-			center_y = int((actual_monitor.y + actual_monitor.height)/2)
-		
-			break
-			
-	if actual_monitor == None:
-		print("not found")
-		return None, None, None, None
-	
-	return center_x, center_y, actual_monitor.width, actual_monitor.height
+__author__ = 'Alex Libório Caranha'
 
-app = QApplication(sys.argv)
-screen = app.desktop().screen()
 
-#window = view.mainView.MainWindow(screen.rect().width()/3, screen.rect().height()/5)
-#window.show()
-#window.adjustSize()
-#window.move(app.desktop().screen().rect().center() - window.rect().center())
+class App:
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.app.setWindowIcon(QIcon('ico/tool.png'))
 
-center_x, center_y, monitor_width, monitor_height = get_center_of_actual_monitor()
+        self.__config_menu__()
+        self.__config_tray__()
+        self.__config_main_window__()
 
-if not center_x == None and not center_y == None:
-	print("------")
-	print("monitor.width: {0}, monitor.height: {1}".format(monitor_width, monitor_height))
-	print("center_x: {0}, center_y: {1}".format(center_x, center_y))
-	print("------")
-	
-	window_width = int(monitor_width/3)
-	window_height = int(monitor_height/5)
-	
-	window = view.mainView.MainWindow(window_width, window_height)
-	window.show()
-	window.adjustSize()
-	window.move(center_x - int(window_width/2), center_y - int(window_height/2))
+    def __config_menu__(self):
+        self.menu = QMenu()
 
-	sys.exit(app.exec_())
+        show_action = self.menu.addAction("&Show")
+        show_action.setShortcut('Ctrl+2')
+        show_action.triggered.connect(self.show)
 
-#pip3 install screeninfo
-#pip3 install pyuserinput
+        setting_action = self.menu.addAction("setting")
+        # setting_action.triggered.connect(self.setting)
+
+        exit_action = self.menu.addAction("exit")
+        exit_action.triggered.connect(self.quit)
+
+    def __config_tray__(self):
+        self.tray = QSystemTrayIcon()
+        self.tray.setIcon(QIcon('ico/tool.png'))
+        self.tray.setContextMenu(self.menu)
+        self.tray.show()
+        self.show_short_message("Begin")
+
+    def __config_main_window__(self):
+        center_x, center_y, monitor_width, monitor_height = classes.util.get_center_of_current_monitor()
+        window_width = int(monitor_width/3)
+        window_height = int(monitor_height/5)
+
+        self.main_window = view.mainView.MainWindow(self)
+        self.main_window.setMinimumSize(window_width, window_height)
+        self.main_window.adjustSize()
+        self.main_window.move(center_x - int(window_width/2), center_y - int(window_height/2))
+
+    def run(self):
+        self.app.exec_()
+
+    def quit(self):
+        self.show_short_message("End")
+        sys.exit()
+
+    def show(self):
+        self.main_window.show()
+
+    def show_short_message(self, message="", ico=QSystemTrayIcon.Information, time_in_seconds=1):
+        self.tray.showMessage(
+            "Instrumenta",
+            message,
+            ico,
+            time_in_seconds * 10)
+
+if __name__ == "__main__":
+    app = App()
+    app.run()
