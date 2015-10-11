@@ -1,9 +1,10 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
-# from PySide.QtGui import QTextEdit
 
-# import pyautogui
-# mouse e teclado: http://pyautogui.readthedocs.org/en/latest/mouse.html
+import classes.speechRecognitionGoogle as sr
+from classes.command import Command
+
+# mouse and keyboard: http://pyautogui.readthedocs.org/en/latest/mouse.html
 
 
 __author__ = 'Alex Libório Caranha'
@@ -20,6 +21,9 @@ class MainWindow(QWidget):
         self.__config_text_edit__()
         self.__config_list_view__()
         self.__config_layout__()
+        self.__config_speech_recognition__()
+
+        self.command = Command(self)
 
         self.edit.setFocus()
 
@@ -47,10 +51,18 @@ class MainWindow(QWidget):
 
         self.setLayout(layout)
 
+    def __config_speech_recognition__(self):
+        self.thread = sr.ThreadSpeechRecognition()
+        self.thread.signal.sig.connect(self.__set_text_edit_from_thread__)
+        self.thread.start()
+
+    def __set_text_edit_from_thread__(self, message):
+        self.edit.setText(message)
+        self.__set_command__(message)
+
     def closeEvent(self, event):
         event.ignore()
         self.hide()
-        # self.app.show_short_message('Running in the background.')
 
     def eventFilter(self, widget, event):
         if widget is self.edit and event.type() == QEvent.KeyPress:
@@ -58,7 +70,7 @@ class MainWindow(QWidget):
             text = widget.text()
 
             if key == Qt.Key_Return:
-                self.command(text)
+                self.__set_command__(text)
 
         if widget is self.edit and event.type() == QEvent.KeyRelease:
             key = event.key()
@@ -68,7 +80,5 @@ class MainWindow(QWidget):
 
         return False
 
-    def command(self, text):
-        if "short message " in text:
-            short_message = text[len("short message "):]
-            self.app.show_short_message(short_message)
+    def __set_command__(self, text):
+        self.command.execute(text)
