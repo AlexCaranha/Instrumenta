@@ -32,7 +32,7 @@ class ThreadSpeechRecognition(QThread):
                     message = self.recognizer.recognize_google(audio, language="pt-BR")
                     print(message)
 
-                    if "comando sair" == message:
+                    if "sair" == message:
                         break
 
                     self.signal.sig.emit(message)

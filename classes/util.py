@@ -1,6 +1,7 @@
 # pip3 install screeninfo
 # pip3 install pyuserinput
 # pip3 install clipboard
+# pip3 install pyhooked
 
 import pymouse
 from screeninfo import get_monitors

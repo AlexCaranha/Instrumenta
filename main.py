@@ -3,6 +3,7 @@ import view.mainView
 import classes.util
 
 from PySide.QtGui import *
+from pyhooked import hook
 
 __author__ = 'Alex Libório Caranha'
 
@@ -15,6 +16,12 @@ class App:
         self.__config_menu__()
         self.__config_tray__()
         self.__config_main_window__()
+
+        self.hk = hook()
+        self.hk.Hotkey(["LCtrl", "LAlt", "Space"], self.show)
+
+    def __del__(self):
+        self.hk.RemHotKey(self.show)
 
     def __config_menu__(self):
         self.menu = QMenu()
