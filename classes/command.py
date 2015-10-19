@@ -24,7 +24,7 @@ class Command:
             return
 
         if "sair" == message:
-            while not self.mainWindow.thread.isFinished() or not self.mainWindow.thread.isClosed():
+            while not self.mainWindow.thread.isFinished():
                 time.sleep(1)
 
             self.mainWindow.app.quit()
@@ -35,14 +35,14 @@ class Command:
             self.mainWindow.app.show_short_message(short_message)
             return
 
-        if "mostrar" == message:
-            self.mainWindow.show()
-            return
+        # if "mostrar" == message:
+        #    self.mainWindow.show()
+        #    return
 
-        result = re.match("não mostrar|esconder", message)
-        if result is not None:
-            self.mainWindow.hide()
-            return
+        # result = re.match("não mostrar|esconder", message)
+        # if result is not None:
+        #    self.mainWindow.hide()
+        #    return
 
         if "abrir site" in message:
             text = message.replace("abrir site ", "")

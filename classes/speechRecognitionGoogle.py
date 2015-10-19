@@ -30,7 +30,7 @@ class ThreadSpeechRecognition(QThread):
 
                 try:
                     message = self.recognizer.recognize_google(audio, language="pt-BR")
-                    print(message)
+                    print("texto: {0}".format(message))
 
                     if "sair" == message:
                         break
