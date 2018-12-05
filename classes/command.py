@@ -31,18 +31,18 @@ class Command:
             return
 
         if "mensagem curta" in message:
-            short_message = message[len("short message "):]
+            short_message = message[len("mensagem curta "):]
             self.mainWindow.app.show_short_message(short_message)
             return
 
-        # if "mostrar" == message:
-        #    self.mainWindow.show()
-        #    return
+        if "mostrar" == message:
+           self.mainWindow.show()
+           return
 
-        # result = re.match("não mostrar|esconder", message)
-        # if result is not None:
-        #    self.mainWindow.hide()
-        #    return
+        result = re.match("não mostrar|esconder", message)
+        if result is not None:
+           self.mainWindow.hide()
+           return
 
         if "abrir site" in message:
             text = message.replace("abrir site ", "")
